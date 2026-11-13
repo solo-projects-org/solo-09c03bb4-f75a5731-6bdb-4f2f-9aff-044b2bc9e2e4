@@ -1,0 +1,19 @@
+services:
+  mock-source:
+    build: ./mock_source
+    ports:
+      - "9000:9000"
+
+  collector:
+    build: ./collector
+    environment:
+      SOURCE_HTTP_BASE: http://mock-source:9000
+      SOURCE_WS_BASE: ws://mock-source:9000
+      RECONNECT_DELAY_SECONDS: "1.0"
+      STALE_TIMEOUT_SECONDS: "3.0"
+      BOOK_LIMIT: "10"
+      SERVE_DEPTH: "5"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mock-source
